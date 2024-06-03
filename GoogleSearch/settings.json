@@ -1,17 +1,22 @@
 {
-  "proxy": {
-    "type": "string",
-    "default": "",
-    "label": "Proxy Server (IP:Port)"
-  },
-  "threads": {
-    "type": "number",
-    "default": 1,
-    "label": "Number of Threads"
-  },
-  "rotationTime": {
-    "type": "number",
-    "default": 60000,
-    "label": "Rotation Time (ms)"
-  }
+  "fields": [
+    {
+      "name": "proxy",
+      "type": "string",
+      "default": "",
+      "label": "Proxy Server (IP:Port)"
+    },
+    {
+      "name": "threads",
+      "type": "number",
+      "default": 1,
+      "label": "Number of Threads"
+    },
+    {
+      "name": "rotationTime",
+      "type": "number",
+      "default": 60000,
+      "label": "Rotation Time (ms)"
+    }
+  ]
 }
