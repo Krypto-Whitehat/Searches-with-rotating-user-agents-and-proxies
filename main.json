@@ -1,20 +1,24 @@
 {
   "id": "e8c9e8e2-fd2a-4de6-9bce-14dfc9d2a7e2",
-  "name": "google-search-bot",
   "title": "Google Search Bot",
   "description": "Performs automated Google searches with rotating user agents and proxies.",
-  "version": "1.0.0",
   "author": "Emco",
+  "repository": "https://github.com/Krypto-Whitehat/Searches-with-rotating-user-agents-and-proxies.git",
   "modules": [
     {
       "id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
       "name": "google-search",
       "title": "Google Search",
       "description": "Automates Google search actions.",
+      "icon": "fa-search",
+      "version": "1.0.0",
+      "versionRequired": "0.2.900",
+      "status": "online",
+      "url": "https://google.com",
       "entry": "./google-search/module.js",
       "settings": "./google-search/settings.json",
-      "icon": "./google-search/icon.png"
+      "width": 1280,
+      "height": 720
     }
   ]
 }
-
