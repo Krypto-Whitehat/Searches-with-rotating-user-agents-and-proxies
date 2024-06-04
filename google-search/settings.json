@@ -1,0 +1,35 @@
+{
+  "fields": [
+    {
+      "name": "searchQuery",
+      "type": "string",
+      "default": "Werbeagentur Köln",
+      "label": "Search Query",
+      "required": true,
+      "min": 1
+    },
+    {
+      "name": "proxy",
+      "type": "string",
+      "default": "",
+      "label": "Proxy Server (IP:Port)",
+      "required": false
+    },
+    {
+      "name": "threads",
+      "type": "number",
+      "default": 1,
+      "label": "Number of Threads",
+      "required": true,
+      "min": 1
+    },
+    {
+      "name": "rotationTime",
+      "type": "number",
+      "default": 60000,
+      "label": "Rotation Time (ms)",
+      "required": true,
+      "min": 1000
+    }
+  ]
+}
