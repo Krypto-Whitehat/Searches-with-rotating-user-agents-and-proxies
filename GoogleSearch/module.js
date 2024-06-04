@@ -1,55 +1,57 @@
-const { Module, Browser } = require('somiibo');
-const fs = require('fs');
+let somiibo;
+let settings;
 
-class GoogleSearch extends Module {
-  constructor() {
-    super();
-    this.name = 'google-search';
-    this.userAgents = JSON.parse(fs.readFileSync('./google-search/user_agents.json', 'utf8'));
+async function main(mod) {
+  somiibo = mod;
+
+  // Initialize the module and get user settings
+  await somiibo.initialize(() => {
+    settings = somiibo.getSetting();
+  });
+
+  // Loop for multiple threads
+  for (let i = 0; i < settings.threads; i++) {
+    performSearch();
   }
 
-  async run() {
-    const proxy = this.settings.get('proxy');
-    const threads = this.settings.get('threads');
-    const rotationTime = this.settings.get('rotationTime');
-    
-    for (let i = 0; i < threads; i++) {
-      this.performSearch(proxy, rotationTime);
-    }
-  }
-
-  async performSearch(proxy, rotationTime) {
-    const browser = new Browser({
+  // Function to perform the search
+  async function performSearch() {
+    const browser = new somiibo.Browser({
       headless: true,
-      proxy: proxy,
-      userAgent: this.getRandomUserAgent()
+      proxy: settings.proxy,
+      userAgent: getRandomUserAgent()
     });
 
     try {
       await browser.goto('https://www.google.de');
-      await browser.type('input[name="q"]', 'Werbeagentur Köln');
-      await browser.click('input[name="btnK"]');
+      await browser.type([settings.searchQuery, 'Enter']);
       await browser.waitForNavigation();
-      await this.scrollPage(browser);
-      await browser.clickLinkByText('Websites zu Orten');
-      await this.scrollPage(browser);
-      await browser.clickLinkByText('Bewertungen zu ICE Werbeagentur Köln - Trustpilot');
-      this.log('Search completed successfully.');
+
+      // Scroll down and up
+      await scrollPage(browser);
+      await browser.select('a h3', { index: '$random' })
+        .then(() => browser.scroll('$selected', { offsetY: 150 }))
+        .then(() => browser.click());
+
+      // Additional steps to click on specific links
+      // ...
+
+      somiibo.log('Search completed successfully.');
     } catch (error) {
-      this.log('An error occurred:', error);
+      somiibo.log('An error occurred:', error);
     } finally {
       await browser.close();
-      if (rotationTime > 0) {
-        setTimeout(() => this.performSearch(proxy, rotationTime), rotationTime);
+      if (settings.rotationTime > 0) {
+        setTimeout(performSearch, settings.rotationTime);
       }
     }
   }
 
-  getRandomUserAgent() {
-    return this.userAgents[Math.floor(Math.random() * this.userAgents.length)];
+  function getRandomUserAgent() {
+    return JSON.parse(fs.readFileSync('./google-search/user_agents.json', 'utf8'))[Math.floor(Math.random() * 1000)];
   }
 
-  async scrollPage(browser) {
+  async function scrollPage(browser) {
     await browser.evaluate(() => {
       window.scrollTo(0, document.body.scrollHeight);
     });
@@ -60,4 +62,4 @@ class GoogleSearch extends Module {
   }
 }
 
-module.exports = GoogleSearch;
+module.exports = main;
